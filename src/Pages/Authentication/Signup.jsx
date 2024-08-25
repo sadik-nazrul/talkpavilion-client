@@ -1,10 +1,126 @@
 import PageTitle from "../../Components/PageTitle";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../Hooks/useAuth";
+import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { FaEyeSlash, FaGoogle, FaRegEye } from "react-icons/fa6";
+import { useState } from "react";
 
 const Signup = () => {
+  const { googleSignIn, loading, setLoading } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  // Show password state
+  const [showPassword, setShowPasword] = useState(false);
+
+  // React Hook form
+  const { register, handleSubmit } = useForm();
+  const onSubmit = (data) => console.log(data);
+
+  /* +++Google login START+++ */
+  const handleGoogleLogin = async () => {
+    try {
+      await googleSignIn();
+      toast.success("Login Successfull");
+      navigate(location.state ? location.state : "/");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+  /* +++Google login END+++ */
   return (
-    <div>
-      <PageTitle title={"SignUp"} />
-      This is SignUp Page
+    <div className="flex justify-center items-center min-h-screen bg-login-bg bg-cover bg-center">
+      <PageTitle title={"Login"} />
+      <div className="p-5 border rounded-md shadow-md lg:w-1/4 w-4/5 bg-[#d8e4e934] space-y-4">
+        <h2 className="text-3xl font-semibold text-white">Login Now</h2>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-2 text-white"
+        >
+          {/* Name */}
+          <label className="form-control w-full">
+            <div className="label">
+              <span className="label-text text-white">Your Name</span>
+            </div>
+            <input
+              {...register("name")}
+              name="name"
+              type="text"
+              required
+              placeholder="email@talkpavilion.com"
+              className="input input-bordered w-full bg-[#d8e4e934]"
+            />
+          </label>
+
+          {/* Email */}
+          <label className="form-control w-full">
+            <div className="label">
+              <span className="label-text text-white">Your Email</span>
+            </div>
+            <input
+              {...register("email")}
+              name="email"
+              type="email"
+              required
+              placeholder="email@talkpavilion.com"
+              className="input input-bordered w-full bg-[#d8e4e934]"
+            />
+          </label>
+
+          {/* Email */}
+          <label className="form-control w-full">
+            <div className="label">
+              <span className="label-text text-white">Password</span>
+            </div>
+            <div className="relative">
+              <input
+                {...register("password")}
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="*******"
+                className="input input-bordered w-full bg-[#d8e4e934]"
+              />
+              <span
+                className="absolute top-4 right-3 cursor-pointer"
+                onClick={() => {
+                  setShowPasword(!showPassword);
+                }}
+              >
+                {showPassword ? (
+                  <FaEyeSlash></FaEyeSlash>
+                ) : (
+                  <FaRegEye></FaRegEye>
+                )}
+              </span>
+            </div>
+          </label>
+
+          {/* Submit Button */}
+          <input
+            type="submit"
+            value="Login"
+            className="bg-orange-500 text-white py-2 w-full rounded cursor-pointer"
+          />
+        </form>
+
+        {/* Create account Link */}
+        <p className="text-white">
+          Already have Account!!
+          <Link to="/signup" className="text-orange-400 underline">
+            {" "}
+            Login Now
+          </Link>
+        </p>
+
+        {/* Google Login */}
+        <button
+          onClick={handleGoogleLogin}
+          className="w-full py-2 bg-orange-500 flex gap-1 items-center rounded justify-center text-white"
+        >
+          <FaGoogle />
+          Continue With Google
+        </button>
+      </div>
     </div>
   );
 };

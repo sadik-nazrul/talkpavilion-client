@@ -58,9 +58,9 @@ const AuthProvider = ({ children }) => {
   //   Logout user
   const logOut = async () => {
     setLoading(true);
-    await axios.get(`${import.meta.env.VITE_TALKPAVILION_API}/logout`, {
-      withCredentials: true,
-    });
+    // await axios.get(`${import.meta.env.VITE_TALKPAVILION_API}/logout`, {
+    //   withCredentials: true,
+    // });
     return signOut(auth);
   };
 
