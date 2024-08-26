@@ -10,9 +10,10 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import toast from "react-hot-toast";
+import Loading from "../../Components/Shared/Loading";
 
 const Login = () => {
-  const { googleSignIn, loading, setLoading, resetPass } = useAuth();
+  const { googleSignIn, loading, setLoading, resetPass, signin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   // Show password state
@@ -20,7 +21,16 @@ const Login = () => {
 
   // React Hook form
   const { register, handleSubmit } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      await signin(data.email, data.password);
+      toast.success("Signin Successfull");
+      navigate(location.state ? location.state : "/");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   /* +++PassWord Reset Start+++ */
   const [email, setEmail] = useState("");
@@ -57,6 +67,10 @@ const Login = () => {
   };
   /* +++Captcha related work END+++ */
 
+  /* +++SignIn with Email and Password START+++ */
+
+  /* +++SignIn with Email and Password END+++ */
+
   /* +++Google login START+++ */
   const handleGoogleLogin = async () => {
     try {
@@ -68,6 +82,8 @@ const Login = () => {
     }
   };
   /* +++Google login END+++ */
+
+  if (loading) <Loading />;
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-login-bg bg-cover bg-center">
@@ -170,6 +186,7 @@ const Login = () => {
 
         {/* Google Login */}
         <button
+          disabled={loading}
           onClick={handleGoogleLogin}
           className="w-full py-2 bg-orange-500 flex gap-1 items-center rounded justify-center text-white"
         >

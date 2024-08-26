@@ -84,7 +84,7 @@ const NavBar = () => {
           <summary className="btn btn-link m-1">
             <FaCircleUser size={30} className="text-black" />
           </summary>
-          <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+          <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-32 p-2 shadow">
             {user ? (
               <>
                 <li>

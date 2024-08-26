@@ -79,18 +79,29 @@ const AuthProvider = ({ children }) => {
   };
 
   //   Ovserver
-  useEffect(() => {
-    const unsebscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      console.log("from authprovider", currentUser);
+  // useEffect(() => {
+  //   const unsebscribe = onAuthStateChanged(auth, (currentUser) => {
+  //     setUser(currentUser);
+  //     console.log("from authprovider", currentUser);
 
-      if (currentUser) {
-        getToken(currentUser.email);
-      }
+  //     if (currentUser) {
+  //       getToken(currentUser.email);
+  //     }
+  //     setLoading(false);
+  //   });
+  //   return () => {
+  //     return unsebscribe();
+  //   };
+  // }, []);
+
+  // Observe user state
+  useEffect(() => {
+    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setLoading(false);
+      setUser(currentUser);
     });
     return () => {
-      return unsebscribe();
+      unSubscribe();
     };
   }, []);
 
