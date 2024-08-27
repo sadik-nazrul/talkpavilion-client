@@ -69,7 +69,7 @@ const CheckoutForm = () => {
               transactionId: paymentIntent.id,
             });
             setErrorMessage(null);
-            alert("Payment successful!");
+            toast.success("Payment successful!");
           } catch (updateError) {
             console.error("Error updating user after payment:", updateError);
             setErrorMessage("Failed to update user data. Please try again.");
