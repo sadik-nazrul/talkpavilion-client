@@ -86,7 +86,7 @@ const AuthProvider = ({ children }) => {
       status: "unpaid",
     };
     const { data } = await axios.put(
-      `${import.meta.env.VITE_TALKPAVILION_API}/user`,
+      `${import.meta.env.VITE_TALKPAVILION_API}/user/${user?.email}`,
       currentUser
     );
     return data;
