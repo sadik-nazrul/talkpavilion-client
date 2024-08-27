@@ -82,8 +82,8 @@ const AuthProvider = ({ children }) => {
   const saveUser = async (user) => {
     const currentUser = {
       email: user?.email,
-      role: "guest",
-      status: "verified",
+      role: "bronze",
+      status: "unpaid",
     };
     const { data } = await axios.put(
       `${import.meta.env.VITE_TALKPAVILION_API}/user`,

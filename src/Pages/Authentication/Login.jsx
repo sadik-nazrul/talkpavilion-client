@@ -67,10 +67,6 @@ const Login = () => {
   };
   /* +++Captcha related work END+++ */
 
-  /* +++SignIn with Email and Password START+++ */
-
-  /* +++SignIn with Email and Password END+++ */
-
   /* +++Google login START+++ */
   const handleGoogleLogin = async () => {
     try {

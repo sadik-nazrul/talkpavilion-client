@@ -7,6 +7,7 @@ import Dashboard from "../Layouts/Dashboard";
 import Error from "../Pages/Errorpage/Error";
 import Membership from "../Pages/Membership/Membership";
 import Privateroute from "./Privateroute";
+import AddPost from "../Pages/Dashboard/GoldMember/AddPost/AddPost";
 
 export const router = createBrowserRouter([
   // Common Routes
@@ -43,6 +44,16 @@ export const router = createBrowserRouter([
   //   Dashboard Routes
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: (
+      <Privateroute>
+        <Dashboard />
+      </Privateroute>
+    ),
+    children: [
+      {
+        path: "add-post",
+        element: <AddPost />,
+      },
+    ],
   },
 ]);
