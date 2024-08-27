@@ -6,6 +6,7 @@ import useAuth from "../../Hooks/useAuth";
 
 const NavBar = () => {
   const { user, logOut } = useAuth();
+
   /* ===Scrolling Feature START=== */
   //   State
   const [scrolling, setScrolling] = useState(false);
@@ -29,11 +30,23 @@ const NavBar = () => {
     <>
       <li>
         <NavLink
+          to="/"
           className={({ isActive }) =>
             isActive ? "bg-primary px-5 py-2 rounded text-white" : ""
           }
         >
           Home
+        </NavLink>
+      </li>
+
+      <li>
+        <NavLink
+          to="/membership"
+          className={({ isActive }) =>
+            isActive ? "bg-primary px-5 py-2 rounded text-white" : ""
+          }
+        >
+          Membership
         </NavLink>
       </li>
     </>
@@ -77,16 +90,27 @@ const NavBar = () => {
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu-horizontal px-1">{navlinks}</ul>
+        <ul className="menu-horizontal gap-4 px-1">{navlinks}</ul>
       </div>
       <div className="navbar-end">
         <details className="dropdown">
           <summary className="btn btn-link m-1">
-            <FaCircleUser size={30} className="text-black" />
+            {user ? (
+              <img
+                className="w-10 rounded-full"
+                src={user?.photoURL}
+                alt={user?.displayName}
+              />
+            ) : (
+              <FaCircleUser size={40} className="text-black" />
+            )}
           </summary>
           <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-32 p-2 shadow">
             {user ? (
               <>
+                <li className="text-center font-bold capitalize">
+                  {user?.displayName}
+                </li>
                 <li>
                   <NavLink to="/dashboard">DashBoard</NavLink>
                 </li>

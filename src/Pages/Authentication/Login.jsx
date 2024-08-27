@@ -83,7 +83,7 @@ const Login = () => {
   };
   /* +++Google login END+++ */
 
-  if (loading) <Loading />;
+  if (loading) return <Loading />;
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-login-bg bg-cover bg-center">

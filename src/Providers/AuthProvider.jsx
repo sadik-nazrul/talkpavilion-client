@@ -78,6 +78,21 @@ const AuthProvider = ({ children }) => {
     return data;
   };
 
+  // Save user in database
+  const saveUser = async (user) => {
+    const currentUser = {
+      email: user?.email,
+      role: "guest",
+      status: "verified",
+    };
+    const { data } = await axios.put(
+      `${import.meta.env.VITE_TALKPAVILION_API}/user`,
+      currentUser
+    );
+    return data;
+    // console.log(data);
+  };
+
   //   Ovserver
   // useEffect(() => {
   //   const unsebscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -99,6 +114,9 @@ const AuthProvider = ({ children }) => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setLoading(false);
       setUser(currentUser);
+      if (currentUser?.email) {
+        saveUser(currentUser);
+      }
     });
     return () => {
       unSubscribe();
