@@ -57,11 +57,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "add-post",
-        element: (
-          <GoldMemberRoute>
-            <AddPost />
-          </GoldMemberRoute>
-        ),
+        element: <AddPost />,
       },
       {
         path: "membership",

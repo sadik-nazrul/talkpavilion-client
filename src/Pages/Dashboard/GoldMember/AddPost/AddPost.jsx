@@ -2,19 +2,29 @@ import { useForm } from "react-hook-form";
 import useAuth from "../../../../Hooks/useAuth";
 import TagsSelect from "./TagsSelect/TagsSelect";
 import RichTextEditor from "./RichTextEditor/RichTextEditor";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 
 const AddPost = () => {
   const { user } = useAuth();
+  const axioSecure = useAxiosSecure();
 
   const {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.table(data);
+  const onSubmit = async (data) => {
+    try {
+      const { data: blog } = await axioSecure.post("/add-blog", data);
+      toast.success("Your Blog successfully addeded");
+      reset();
+    } catch (err) {
+      toast.error(err.response.data);
+    }
   };
 
   return (
