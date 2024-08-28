@@ -54,7 +54,15 @@ const Login = () => {
   const captchaRef = useRef(null);
   // Captcha Engine
   useEffect(() => {
-    loadCaptchaEnginge(6);
+    const timer = setTimeout(() => {
+      try {
+        loadCaptchaEnginge(6);
+      } catch (error) {
+        console.error("Captcha initialization failed:", error);
+      }
+    }, 100); // Adjust as necessary
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleValidateCaptcha = () => {

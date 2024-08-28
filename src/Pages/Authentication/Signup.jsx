@@ -12,7 +12,7 @@ const image_hosting_api = `${
   import.meta.env.VITE_IMGBB_API
 }?key=${image_hosting_key}`;
 const Signup = () => {
-  const { createUser, signInWithGoogle, updateUser, loading, setLoading } =
+  const { createUser, googleSignIn, updateUser, loading, setLoading } =
     useAuth();
   const navigate = useNavigate();
   const location = useLocation();

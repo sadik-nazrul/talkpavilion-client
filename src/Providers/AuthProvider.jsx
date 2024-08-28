@@ -79,19 +79,6 @@ const AuthProvider = ({ children }) => {
   };
 
   // // Save user in database
-  // const saveUser = async (user) => {
-  //   const currentUser = {
-  //     email: user?.email,
-  //     role: "bronze",
-  //     status: "unpaid",
-  //   };
-  //   const { data } = await axios.put(
-  //     `${import.meta.env.VITE_TALKPAVILION_API}/user/${user?.email}`,
-  //     currentUser
-  //   );
-  //   return data;
-  // };
-
   const saveUser = async (user) => {
     try {
       // Fetch the existing user data

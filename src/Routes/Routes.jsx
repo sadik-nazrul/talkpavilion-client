@@ -9,6 +9,7 @@ import Membership from "../Pages/Membership/Membership";
 import Privateroute from "./Privateroute";
 import AddPost from "../Pages/Dashboard/GoldMember/AddPost/AddPost";
 import BronzeMemberRoute from "./BronzeMemberRoute";
+import LockRoute from "./LockRoute";
 
 export const router = createBrowserRouter([
   // Common Routes
@@ -27,11 +28,19 @@ export const router = createBrowserRouter([
   //   Authentication routes
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <LockRoute>
+        <Login />
+      </LockRoute>
+    ),
   },
   {
     path: "/signup",
-    element: <Signup />,
+    element: (
+      <LockRoute>
+        <Signup />
+      </LockRoute>
+    ),
   },
 
   //   Dashboard Routes
