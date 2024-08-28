@@ -58,9 +58,9 @@ const AuthProvider = ({ children }) => {
   //   Logout user
   const logOut = async () => {
     setLoading(true);
-    // await axios.get(`${import.meta.env.VITE_TALKPAVILION_API}/logout`, {
-    //   withCredentials: true,
-    // });
+    await axios.get(`${import.meta.env.VITE_TALKPAVILION_API}/logout`, {
+      withCredentials: true,
+    });
     return signOut(auth);
   };
 
@@ -78,48 +78,70 @@ const AuthProvider = ({ children }) => {
     return data;
   };
 
-  // Save user in database
+  // // Save user in database
+  // const saveUser = async (user) => {
+  //   const currentUser = {
+  //     email: user?.email,
+  //     role: "bronze",
+  //     status: "unpaid",
+  //   };
+  //   const { data } = await axios.put(
+  //     `${import.meta.env.VITE_TALKPAVILION_API}/user/${user?.email}`,
+  //     currentUser
+  //   );
+  //   return data;
+  // };
+
   const saveUser = async (user) => {
-    const currentUser = {
-      email: user?.email,
-      role: "bronze",
-      status: "unpaid",
-    };
-    const { data } = await axios.put(
-      `${import.meta.env.VITE_TALKPAVILION_API}/user/${user?.email}`,
-      currentUser
-    );
-    return data;
-    // console.log(data);
+    try {
+      // Fetch the existing user data
+      const { data: existingUser } = await axios.get(
+        `${import.meta.env.VITE_TALKPAVILION_API}/user/${user?.email}`
+      );
+
+      // If the user exists and their role/status hasn't changed, don't update
+      if (
+        existingUser &&
+        existingUser.role === "bronze" &&
+        existingUser.role === "admin" &&
+        existingUser.status === "unpaid"
+      ) {
+        // No need to update
+        return;
+      }
+
+      // If the user doesn't exist or has different role/status, update it
+      const currentUser = {
+        email: user?.email,
+        // Default to bronze if no role
+        role: existingUser?.role || "bronze",
+        // Default to unpaid if no status
+        status: existingUser?.status || "unpaid",
+      };
+
+      const { data } = await axios.put(
+        `${import.meta.env.VITE_TALKPAVILION_API}/user/${user?.email}`,
+        currentUser
+      );
+
+      return data;
+    } catch (error) {
+      console.error("Error saving user:", error);
+    }
   };
 
   //   Ovserver
-  // useEffect(() => {
-  //   const unsebscribe = onAuthStateChanged(auth, (currentUser) => {
-  //     setUser(currentUser);
-  //     console.log("from authprovider", currentUser);
-
-  //     if (currentUser) {
-  //       getToken(currentUser.email);
-  //     }
-  //     setLoading(false);
-  //   });
-  //   return () => {
-  //     return unsebscribe();
-  //   };
-  // }, []);
-
-  // Observe user state
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      if (currentUser?.email) {
+      if (currentUser) {
+        getToken(currentUser?.email);
         saveUser(currentUser);
       }
+      setLoading(false);
     });
     return () => {
-      unSubscribe();
+      return unsubscribe();
     };
   }, []);
 

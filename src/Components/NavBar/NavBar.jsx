@@ -41,7 +41,7 @@ const NavBar = () => {
 
       <li>
         <NavLink
-          to="/membership"
+          to="/dashboard/membership"
           className={({ isActive }) =>
             isActive ? "bg-primary px-5 py-2 rounded text-white" : ""
           }

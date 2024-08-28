@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { GrLogout } from "react-icons/gr";
 import { FcSettings } from "react-icons/fc";
-import { BsFingerprint, BsFillHouseAddFill } from "react-icons/bs";
-import { GrUserAdmin } from "react-icons/gr";
-import { MdHomeWork } from "react-icons/md";
 import { AiOutlineBars } from "react-icons/ai";
 import { BsGraphUp } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
@@ -11,10 +8,12 @@ import { Link } from "react-router-dom";
 import useAuth from "../../../Hooks/useAuth";
 import logo from "../../../assets/talkpavilion-logo.png";
 import { FaBlog, FaBookBookmark } from "react-icons/fa6";
+import useRole from "../../../Hooks/useRole";
 
 const Sidebar = () => {
   const { logOut } = useAuth();
   const [isActive, setActive] = useState(false);
+  const [role, isLoading] = useRole();
 
   // Sidebar Responsive Handler
   const handleToggle = () => {

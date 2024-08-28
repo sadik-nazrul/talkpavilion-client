@@ -1,97 +1,109 @@
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import "./CheckoutForm.css";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { useEffect, useState } from "react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import useAuth from "../../Hooks/useAuth";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import useAuth from "../../Hooks/useAuth";
 
 const CheckoutForm = () => {
-  const navigate = useNavigate();
-  const axiosSecure = useAxiosSecure();
   const stripe = useStripe();
   const elements = useElements();
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const [clientSecret, setClientSecret] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentSuccessful, setPaymentSuccessful] = useState(false); // Track payment success
+  const [transactionId, setTransactionId] = useState("");
+  const [cardComplete, setCardComplete] = useState(false);
+  const [cardError, setCardError] = useState(null);
   const price = 14;
 
   useEffect(() => {
-    // Create a PaymentIntent as soon as the page loads
-    axiosSecure.post("/create-payment-intent", { price }).then(({ data }) => {
-      setClientSecret(data.clientSecret);
-    });
+    axiosSecure
+      .post("/create-payment-intent", {
+        price,
+      })
+      .then((res) => {
+        setClientSecret(res.data.clientSecret);
+      });
   }, [axiosSecure, price]);
 
-  // In your CheckoutForm component
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const handlePayment = async () => {
     if (!stripe || !elements) {
+      // Stripe.js has not loaded yet. Make sure to disable
+      // form submission until Stripe.js has loaded.
       return;
     }
 
-    setIsProcessing(true);
+    // Get a reference to a mounted CardElement. Elements knows how
+    // to find your CardElement because there can only ever be one of
+    // each type of element.
+    const card = elements.getElement(CardElement);
 
-    try {
-      // Get client secret
-      const { data } = await axiosSecure.post("/create-payment-intent", {
-        price,
-      });
-      setClientSecret(data.clientSecret);
+    if (card == null) {
+      return;
+    }
 
-      // Confirm card payment
-      const cardElement = elements.getElement(CardElement);
-      const { error, paymentIntent } = await stripe.confirmCardPayment(
-        data.clientSecret,
-        {
-          payment_method: {
-            card: cardElement,
+    // Use your card Element with other Stripe.js APIs
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: "card",
+      card,
+    });
+
+    if (error) {
+      console.log("[error]", error);
+    } else {
+      console.log("[PaymentMethod]", paymentMethod);
+    }
+
+    // Confirm payment
+    const { paymentIntent, error: confirmError } =
+      await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: card,
+          billing_details: {
+            name: user?.displayName || "anonymous",
+            email: user?.email || "anonymous",
           },
-        }
-      );
+        },
+      });
+    if (confirmError) {
+      toast.error("Payment Confirm Error");
+    } else {
+      console.log("payment intent", paymentIntent);
+      if (paymentIntent.status === "succeeded") {
+        setTransactionId(paymentIntent.id);
 
-      if (error) {
-        console.log("[error]", error);
-        setErrorMessage(error.message);
-        setIsProcessing(false);
-      } else {
-        console.log("[PaymentIntent]", paymentIntent);
-
-        // Check paymentIntent status
-        if (paymentIntent.status === "succeeded") {
-          // Update user data
-          try {
-            await axiosSecure.patch("/user/update-payment", {
-              email: user.email,
-              transactionId: paymentIntent.id,
-            });
-            setErrorMessage(null);
-            toast.success("Payment successful!");
-          } catch (updateError) {
-            console.error("Error updating user after payment:", updateError);
-            setErrorMessage("Failed to update user data. Please try again.");
+        // Update user role and status
+        try {
+          const currentUser = {
+            email: user?.email,
+            role: "gold",
+            status: "paid",
+            transactionId: paymentIntent.id,
+          };
+          const { data } = await axiosSecure.put(
+            `/user/${user?.email}`,
+            currentUser
+          );
+          console.log(data);
+          if (data.modifiedCount > 0) {
+            toast.success("You are now gold member");
           }
-        } else {
-          setErrorMessage("Payment was not successful. Please try again.");
+        } catch (err) {
+          toast.error(err.message);
         }
-
-        setIsProcessing(false);
       }
-    } catch (error) {
-      console.error("Error processing payment:", error);
-      setErrorMessage(
-        "There was an issue processing your payment. Please try again."
-      );
-      setIsProcessing(false);
     }
   };
 
+  const handleCardChange = (event) => {
+    setCardComplete(event.complete);
+    setCardError(event.error ? event.error.message : null);
+  };
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <CardElement
+        onChange={handleCardChange}
         options={{
           style: {
             base: {
@@ -108,17 +120,15 @@ const CheckoutForm = () => {
         }}
       />
       <button
-        onClick={handlePayment}
-        disabled={!stripe || isProcessing || paymentSuccessful}
+        type="submit"
+        disabled={!stripe || !clientSecret || !cardComplete}
+        className={`bg-orange-500 text-white py-2 px-5 mt-4 rounded ${
+          !cardComplete ? "cursor-not-allowed bg-[#d8e4e934]" : "cursor-pointer"
+        }`}
       >
-        {isProcessing
-          ? "Processing..."
-          : paymentSuccessful
-          ? "Payment Completed"
-          : "Pay $14"}
+        Pay ${price}
       </button>
-      {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
-    </div>
+    </form>
   );
 };
 

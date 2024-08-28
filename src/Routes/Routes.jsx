@@ -8,6 +8,7 @@ import Error from "../Pages/Errorpage/Error";
 import Membership from "../Pages/Membership/Membership";
 import Privateroute from "./Privateroute";
 import AddPost from "../Pages/Dashboard/GoldMember/AddPost/AddPost";
+import BronzeMemberRoute from "./BronzeMemberRoute";
 
 export const router = createBrowserRouter([
   // Common Routes
@@ -19,14 +20,6 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
-      },
-      {
-        path: "/membership",
-        element: (
-          <Privateroute>
-            <Membership />
-          </Privateroute>
-        ),
       },
     ],
   },
@@ -53,6 +46,14 @@ export const router = createBrowserRouter([
       {
         path: "add-post",
         element: <AddPost />,
+      },
+      {
+        path: "membership",
+        element: (
+          <BronzeMemberRoute>
+            <Membership />
+          </BronzeMemberRoute>
+        ),
       },
     ],
   },
