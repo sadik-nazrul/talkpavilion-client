@@ -10,6 +10,9 @@ import Privateroute from "./Privateroute";
 import AddPost from "../Pages/Dashboard/GoldMember/AddPost/AddPost";
 import BronzeMemberRoute from "./BronzeMemberRoute";
 import LockRoute from "./LockRoute";
+import GoldMemberRoute from "./GoldMemberRoute";
+import Profile from "../Pages/Dashboard/Common/Profile/Profile";
+import MyPost from "../Pages/Dashboard/Common/MyPost/MyPost";
 
 export const router = createBrowserRouter([
   // Common Routes
@@ -54,7 +57,11 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "add-post",
-        element: <AddPost />,
+        element: (
+          <GoldMemberRoute>
+            <AddPost />
+          </GoldMemberRoute>
+        ),
       },
       {
         path: "membership",
@@ -63,6 +70,14 @@ export const router = createBrowserRouter([
             <Membership />
           </BronzeMemberRoute>
         ),
+      },
+      {
+        path: "my-profile",
+        element: <Profile />,
+      },
+      {
+        path: "my-posts",
+        element: <MyPost />,
       },
     ],
   },
