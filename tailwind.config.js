@@ -8,6 +8,7 @@ export default {
     extend: {
       backgroundImage: {
         'login-bg': "url('/src/assets/blue-pattern.jpeg')",
+        'banner-bg': "url('/src/assets/hero-banner.jpeg')",
       }
     },
   },

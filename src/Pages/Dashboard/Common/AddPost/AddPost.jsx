@@ -1,15 +1,19 @@
 import { useForm } from "react-hook-form";
-
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import useAuth from "../../../../Hooks/useAuth";
 import TagsSelect from "./TagsSelect/TagsSelect";
 import RichTextEditor from "./RichTextEditor/RichTextEditor";
 import PageTitle from "../../../../Components/PageTitle";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import useTags from "../../../../Hooks/useTags";
 
 const AddPost = () => {
   const { user } = useAuth();
   const axioSecure = useAxiosSecure();
+  const navigate = useNavigate();
+  const [tags] = useTags();
 
   const {
     register,
@@ -20,14 +24,24 @@ const AddPost = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    try {
-      const { data: blog } = await axioSecure.post("/add-blog", data);
-      toast.success("Your Blog successfully addeded");
-      reset();
-    } catch (err) {
-      toast.error(err.response.data);
-    }
+    data.createdAt = new Date().toISOString();
+    mutateAsync(data);
   };
+
+  //   Mutation
+  const { mutateAsync } = useMutation({
+    mutationFn: async (data) => {
+      const { data: blog } = await axioSecure.post("/add-blog", data);
+      return blog;
+    },
+    onSuccess: () => {
+      toast.success("Your Blog successfully addeded");
+      navigate("/dashboard/my-posts");
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+  });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-5">
@@ -107,7 +121,7 @@ const AddPost = () => {
 
       {/* Tag selection */}
       <p className="font-bold">Select your Tags:</p>
-      <TagsSelect control={control} />
+      <TagsSelect tags={tags} control={control} />
 
       <div className="lg:flex gap-4">
         {/* UpVote */}

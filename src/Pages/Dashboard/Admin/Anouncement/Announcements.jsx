@@ -40,13 +40,15 @@ const Announcements = () => {
                 <td title={announcement.description}>
                   {announcement?.description.substring(0, 24)}...
                 </td>
-                {announcement?.createdAt
-                  ? new Date(announcement.createdAt).toLocaleString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })
-                  : "Not Found"}
+                <td>
+                  {announcement?.createdAt
+                    ? new Date(announcement.createdAt).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })
+                    : "Not Found"}
+                </td>
               </tr>
             ))}
           </tbody>

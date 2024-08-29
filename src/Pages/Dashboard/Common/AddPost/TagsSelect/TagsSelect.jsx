@@ -5,7 +5,7 @@ import CreatableSelect from "react-select/creatable";
 
 const animatedComponents = makeAnimated();
 
-const TagsSelect = ({ control }) => {
+const TagsSelect = ({ control, tags }) => {
   return (
     <Controller
       name="tags"
@@ -14,9 +14,11 @@ const TagsSelect = ({ control }) => {
       render={({ field }) => (
         <CreatableSelect
           {...field}
-          closeMenuOnSelect={false}
-          components={animatedComponents}
           isMulti
+          createOptionPosition="first"
+          options={tags}
+          components={animatedComponents}
+          placeholder="Select or create tags..."
         />
       )}
     />
