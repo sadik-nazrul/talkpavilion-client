@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import useAuth from "../../../../Hooks/useAuth";
 import TagsSelect from "./TagsSelect/TagsSelect";
 import RichTextEditor from "./RichTextEditor/RichTextEditor";
+import PageTitle from "../../../../Components/PageTitle";
 
 const AddPost = () => {
   const { user } = useAuth();
@@ -30,6 +31,7 @@ const AddPost = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-5">
+      <PageTitle title={"Add Post"} />
       {/* Author Info */}
       <div className="lg:flex gap-4 items-center">
         {/* Author name */}

@@ -78,7 +78,7 @@ const AuthProvider = ({ children }) => {
     return data;
   };
 
-  // // Save user in database
+  // Save user in database
   const saveUser = async (user) => {
     try {
       // Fetch the existing user data
@@ -90,8 +90,8 @@ const AuthProvider = ({ children }) => {
       if (
         existingUser &&
         existingUser.role === "bronze" &&
-        existingUser.role === "admin" &&
-        existingUser.status === "unpaid"
+        existingUser.status === "unpaid" &&
+        existingUser.name === user?.displayName
       ) {
         // No need to update
         return;
@@ -99,10 +99,9 @@ const AuthProvider = ({ children }) => {
 
       // If the user doesn't exist or has different role/status, update it
       const currentUser = {
+        name: user?.displayName || existingUser?.name,
         email: user?.email,
-        // Default to bronze if no role
         role: existingUser?.role || "bronze",
-        // Default to unpaid if no status
         status: existingUser?.status || "unpaid",
       };
 

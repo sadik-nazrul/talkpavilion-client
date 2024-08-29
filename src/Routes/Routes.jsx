@@ -12,6 +12,8 @@ import LockRoute from "./LockRoute";
 import Profile from "../Pages/Dashboard/Common/Profile/Profile";
 import MyPost from "../Pages/Dashboard/Common/MyPost/MyPost";
 import AddPost from "../Pages/Dashboard/Common/AddPost/AddPost";
+import ManageUsers from "../Pages/Dashboard/Admin/ManageUsers/ManageUsers";
+import AdminRoute from "./AdminRoute";
 
 export const router = createBrowserRouter([
   // Common Routes
@@ -73,6 +75,14 @@ export const router = createBrowserRouter([
       {
         path: "my-posts",
         element: <MyPost />,
+      },
+      {
+        path: "manage-users",
+        element: (
+          <AdminRoute>
+            <ManageUsers />
+          </AdminRoute>
+        ),
       },
     ],
   },
