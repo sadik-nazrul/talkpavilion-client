@@ -34,7 +34,7 @@ const AddPost = () => {
       <PageTitle title={"Add Post"} />
       {/* Author Info */}
       <div className="lg:flex gap-4 items-center">
-        {/* Author name */}
+        {/* Author Image */}
         <label className="form-control w-full">
           <div className="label">
             <span className="font-bold">Author Image</span>

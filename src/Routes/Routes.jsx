@@ -14,6 +14,8 @@ import MyPost from "../Pages/Dashboard/Common/MyPost/MyPost";
 import AddPost from "../Pages/Dashboard/Common/AddPost/AddPost";
 import ManageUsers from "../Pages/Dashboard/Admin/ManageUsers/ManageUsers";
 import AdminRoute from "./AdminRoute";
+import AddAnnouncement from "../Pages/Dashboard/Admin/Anouncement/AddAnnouncement";
+import Announcements from "../Pages/Dashboard/Admin/Anouncement/Announcements";
 
 export const router = createBrowserRouter([
   // Common Routes
@@ -76,11 +78,29 @@ export const router = createBrowserRouter([
         path: "my-posts",
         element: <MyPost />,
       },
+
+      // Admin Only Routes
       {
         path: "manage-users",
         element: (
           <AdminRoute>
             <ManageUsers />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "add-announcement",
+        element: (
+          <AdminRoute>
+            <AddAnnouncement />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "announcement",
+        element: (
+          <AdminRoute>
+            <Announcements />
           </AdminRoute>
         ),
       },

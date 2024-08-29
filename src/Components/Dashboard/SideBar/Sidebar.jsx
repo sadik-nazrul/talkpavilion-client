@@ -9,6 +9,7 @@ import useAuth from "../../../Hooks/useAuth";
 import logo from "../../../assets/talkpavilion-logo.png";
 import { FaBlog, FaBookBookmark } from "react-icons/fa6";
 import useRole from "../../../Hooks/useRole";
+import AdminMenu from "./Menu/AdminMenu";
 
 const Sidebar = () => {
   const { logOut } = useAuth();
@@ -19,6 +20,9 @@ const Sidebar = () => {
   const handleToggle = () => {
     setActive(!isActive);
   };
+
+  // User roles
+  const admin = role === "admin";
   return (
     <>
       {/* Small Screen Navbar */}
@@ -107,6 +111,8 @@ const Sidebar = () => {
 
                 <span className="mx-4 font-medium">My Posts</span>
               </NavLink>
+
+              {admin && <AdminMenu />}
             </nav>
           </div>
         </div>
