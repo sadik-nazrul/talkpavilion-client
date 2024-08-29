@@ -7,12 +7,11 @@ import Dashboard from "../Layouts/Dashboard";
 import Error from "../Pages/Errorpage/Error";
 import Membership from "../Pages/Membership/Membership";
 import Privateroute from "./Privateroute";
-import AddPost from "../Pages/Dashboard/GoldMember/AddPost/AddPost";
 import BronzeMemberRoute from "./BronzeMemberRoute";
 import LockRoute from "./LockRoute";
-import GoldMemberRoute from "./GoldMemberRoute";
 import Profile from "../Pages/Dashboard/Common/Profile/Profile";
 import MyPost from "../Pages/Dashboard/Common/MyPost/MyPost";
+import AddPost from "../Pages/Dashboard/Common/AddPost/AddPost";
 
 export const router = createBrowserRouter([
   // Common Routes

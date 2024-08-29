@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form";
+
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 import useAuth from "../../../../Hooks/useAuth";
 import TagsSelect from "./TagsSelect/TagsSelect";
 import RichTextEditor from "./RichTextEditor/RichTextEditor";
-import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
-import toast from "react-hot-toast";
 
 const AddPost = () => {
   const { user } = useAuth();
