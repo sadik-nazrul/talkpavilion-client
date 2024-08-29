@@ -19,6 +19,8 @@ const Login = () => {
   // Show password state
   const [showPassword, setShowPasword] = useState(false);
 
+  console.log(location);
+
   // React Hook form
   const { register, handleSubmit } = useForm();
   const onSubmit = async (data) => {

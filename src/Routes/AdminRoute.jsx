@@ -5,8 +5,10 @@ import { Navigate } from "react-router-dom";
 
 const AdminRoute = ({ children }) => {
   const [role, isLoading] = useRole();
+  const admin = role === "admin";
   if (isLoading) return <Loading />;
-  if (role === "admin") return children;
+  if (admin) return children;
+
   return <Navigate to="/dashboard" />;
 };
 
