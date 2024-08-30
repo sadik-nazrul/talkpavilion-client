@@ -132,6 +132,7 @@ const AddPost = () => {
           <input
             type="number"
             defaultValue={0}
+            readOnly
             className="input input-bordered w-full"
             name="upVote"
             min={0}
@@ -147,6 +148,7 @@ const AddPost = () => {
           <input
             type="number"
             defaultValue={0}
+            readOnly
             className="input input-bordered w-full"
             name="downVote"
             min={0}

@@ -11,7 +11,6 @@ import { FaFacebook, FaLinkedin, FaReddit, FaTwitter } from "react-icons/fa6";
 
 const BlogDetails = () => {
   const location = useLocation();
-
   const shareUrl = `${import.meta.env.VITE_URL}/${location.pathname}`;
 
   const {
@@ -57,23 +56,26 @@ const BlogDetails = () => {
             email={authorEmail}
           />
 
-          <h2 className="text-xl font-bold">Share the Post:</h2>
-          <div className="flex gap-4 py-3 rounded justify-center bg-orange-400 px-4 text-white">
-            <FacebookShareButton url={shareUrl}>
-              <FaFacebook size={30} />
-            </FacebookShareButton>
+          {/* Share Option */}
+          <div>
+            <h2 className="text-xl font-bold">Share the Post:</h2>
+            <div className="flex gap-4 py-3 rounded justify-center bg-orange-400 px-4 text-white">
+              <FacebookShareButton url={shareUrl}>
+                <FaFacebook size={30} />
+              </FacebookShareButton>
 
-            <LinkedinShareButton url={shareUrl}>
-              <FaLinkedin size={30} />
-            </LinkedinShareButton>
+              <LinkedinShareButton url={shareUrl}>
+                <FaLinkedin size={30} />
+              </LinkedinShareButton>
 
-            <RedditShareButton url={shareUrl}>
-              <FaReddit size={30} />
-            </RedditShareButton>
+              <RedditShareButton url={shareUrl}>
+                <FaReddit size={30} />
+              </RedditShareButton>
 
-            <TwitterShareButton url={shareUrl}>
-              <FaTwitter size={30} />
-            </TwitterShareButton>
+              <TwitterShareButton url={shareUrl}>
+                <FaTwitter size={30} />
+              </TwitterShareButton>
+            </div>
           </div>
         </div>
       </div>
