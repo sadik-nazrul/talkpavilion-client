@@ -16,6 +16,7 @@ import ManageUsers from "../Pages/Dashboard/Admin/ManageUsers/ManageUsers";
 import AdminRoute from "./AdminRoute";
 import AddAnnouncement from "../Pages/Dashboard/Admin/Anouncement/AddAnnouncement";
 import Announcements from "../Pages/Dashboard/Admin/Anouncement/Announcements";
+import BlogDetails from "../Pages/BlogDetails/BlogDetails";
 
 export const router = createBrowserRouter([
   // Common Routes
@@ -27,6 +28,12 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/blog/:id",
+        element: <BlogDetails />,
+        loader: ({ params }) =>
+          fetch(`${import.meta.env.VITE_TALKPAVILION_API}/blog/${params.id}`),
       },
     ],
   },

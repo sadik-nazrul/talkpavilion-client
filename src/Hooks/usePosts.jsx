@@ -10,7 +10,7 @@ const usePosts = (sortOrder = "descending", page = 1, limit = 3) => {
     queryKey: ["posts", user?.email, sortOrder, page, limit],
     queryFn: async () => {
       const res = await axiosSecure.get(
-        `/blogs?sortOrder=${sortOrder}&page=${page}&limit${limit}`
+        `/sortblogs?sortOrder=${sortOrder}&page=${page}&limit${limit}`
       );
       return res.data;
     },
