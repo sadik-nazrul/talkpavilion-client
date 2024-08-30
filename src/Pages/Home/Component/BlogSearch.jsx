@@ -33,7 +33,7 @@ const BlogSearch = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-[calc(100vh-124px)] bg-banner-bg bg-cover bg-center">
+    <div className="flex flex-col justify-center items-center h-[100vh] bg-banner-bg bg-cover bg-center">
       <input
         type="text"
         value={selectedTag}
