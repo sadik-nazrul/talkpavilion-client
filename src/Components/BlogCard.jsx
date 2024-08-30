@@ -4,6 +4,8 @@ import { LiaVoteYeaSolid } from "react-icons/lia";
 import { Link } from "react-router-dom";
 
 const BlogCard = ({ post }) => {
+  const voteCount = post?.upVote + post?.downVote;
+
   return (
     <Link to={`/blog/${post._id}`}>
       <div className="shadow rounded-md p-4 flex flex-col gap-4">
@@ -35,7 +37,7 @@ const BlogCard = ({ post }) => {
           </p>
           <p className="flex gap-1 items-center">
             <LiaVoteYeaSolid />
-            {post?.voteCount || "No Data"}
+            {voteCount || "No Data"}
           </p>
         </div>
 

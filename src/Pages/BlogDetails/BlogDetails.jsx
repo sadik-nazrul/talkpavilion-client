@@ -1,4 +1,4 @@
-import { useLoaderData, useLocation } from "react-router-dom";
+import { useLoaderData, useLocation, useParams } from "react-router-dom";
 import parse from "html-react-parser";
 import AuthorBox from "./AuthorBox/AuthorBox";
 import {
@@ -7,11 +7,27 @@ import {
   RedditShareButton,
   TwitterShareButton,
 } from "react-share";
-import { FaFacebook, FaLinkedin, FaReddit, FaTwitter } from "react-icons/fa6";
+import {
+  FaClock,
+  FaFacebook,
+  FaLinkedin,
+  FaReddit,
+  FaThumbsDown,
+  FaThumbsUp,
+  FaTwitter,
+} from "react-icons/fa6";
+import useAxiosCommon from "../../Hooks/useAxiosCommon";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 const BlogDetails = () => {
   const location = useLocation();
   const shareUrl = `${import.meta.env.VITE_URL}/${location.pathname}`;
+  const url = useParams();
+  const axiosCommon = useAxiosCommon();
+  const [vote, setVote] = useState(null);
+  const [disabled, setDisabled] = useState(false);
 
   const {
     authorName,
@@ -21,11 +37,31 @@ const BlogDetails = () => {
     postDescription,
     createdAt,
     tags,
-    upVote,
-    downVote,
-    _id,
   } = useLoaderData();
   const description = parse(postDescription);
+
+  // Mutation hook for sending vote data
+  const { mutateAsync } = useMutation({
+    mutationFn: async (vote) => {
+      const res = await axiosCommon.put("/vote", vote);
+      if (res.data.modifiedCount > 0) {
+        toast.success("Your vote sucessfully counted");
+        setDisabled(true);
+      }
+      return res.data;
+    },
+  });
+
+  // Handle vote submission
+  const handleVote = async (vote, id) => {
+    const voteData = { vote, id: id.id }; // Structure your vote data as needed
+    setVote(voteData); // Set state if necessary
+    try {
+      await mutateAsync(voteData); // Send vote data to the backend
+    } catch (error) {
+      console.error("Error submitting vote:", error); // Handle error as needed
+    }
+  };
 
   return (
     <div>
@@ -76,6 +112,38 @@ const BlogDetails = () => {
                 <FaTwitter size={30} />
               </TwitterShareButton>
             </div>
+          </div>
+
+          {/* Vote option */}
+          <div>
+            <h2 className="text-xl font-bold">Vote Now:</h2>
+            <div className="flex gap-4">
+              <button disabled={disabled} onClick={() => handleVote(1, url)}>
+                <FaThumbsUp size={30} />
+              </button>
+              <button disabled={disabled} onClick={() => handleVote(0, url)}>
+                <FaThumbsDown size={30} />
+              </button>
+            </div>
+          </div>
+
+          {/* Publishe date */}
+          <div>
+            <h2 className="text-xl font-bold">Published On:</h2>
+            <p className="flex gap-1 items-center">
+              <FaClock />
+              {createdAt
+                ? new Date(createdAt).toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    second: "numeric",
+                    hour12: true, // or false if you prefer 24-hour time format
+                  })
+                : "Not Found"}
+            </p>
           </div>
         </div>
       </div>

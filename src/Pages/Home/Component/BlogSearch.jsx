@@ -39,7 +39,7 @@ const BlogSearch = () => {
         value={selectedTag}
         onChange={handleSearchChange}
         placeholder="Enter tag to search"
-        className="border py-4 px-5 rounded-t rounded-b-none lg:w-1/2 focus:outline-none"
+        className="border py-4 px-5 rounded-t rounded-b-none lg:w-1/2 w-5/6 focus:outline-none"
       />
 
       {tagblogs && tagblogs.length > 0 && (
