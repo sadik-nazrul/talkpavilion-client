@@ -20,6 +20,7 @@ import useAxiosCommon from "../../Hooks/useAxiosCommon";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import CommentBox from "./CommentBox/CommentBox";
 
 const BlogDetails = () => {
   const location = useLocation();
@@ -37,6 +38,7 @@ const BlogDetails = () => {
     postDescription,
     createdAt,
     tags,
+    _id,
   } = useLoaderData();
   const description = parse(postDescription);
 
@@ -82,6 +84,9 @@ const BlogDetails = () => {
               </p>
             ))}
           </div>
+
+          {/* Comment */}
+          <CommentBox postId={_id} />
         </div>
 
         {/* sidebar */}
