@@ -3,16 +3,27 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import useAxiosCommon from "../../../Hooks/useAxiosCommon";
 import useBlogs from "../../../Hooks/useBlogs";
+import { useState } from "react";
 
 const CommentBox = ({ postId }) => {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, watch } = useForm();
   const axiosCommon = useAxiosCommon();
   const [blogs] = useBlogs();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   // Find the comments
   const comments = blogs.find((blog) => blog._id === postId)?.comments;
 
-  //   Post comment
+  // Watch the comment field
+  const commentValue = watch("comment");
+
+  // Check the word count
+  const checkWordCount = (value) => {
+    const wordCount = value.trim().split(/\s+/).length;
+    setIsButtonDisabled(wordCount < 5);
+  };
+
+  // Post comment
   const { mutateAsync } = useMutation({
     mutationFn: async (data) => {
       const { data: comment } = await axiosCommon.post("/comment", data);
@@ -22,13 +33,14 @@ const CommentBox = ({ postId }) => {
       return comment.data;
     },
   });
+
   const onSubmit = (data) => {
     mutateAsync(data);
   };
 
-  //   handle reply func
-  const handleReply = () => {
-    // do somting
+  // Handle textarea input change
+  const handleInputChange = (e) => {
+    checkWordCount(e.target.value);
   };
 
   return (
@@ -40,7 +52,7 @@ const CommentBox = ({ postId }) => {
           </h2>
 
           {comments.map((comment, idx) => (
-            <p key={idx}>{comment.comment} </p>
+            <p key={idx}>{comment.comment}</p>
           ))}
         </div>
       ) : (
@@ -62,7 +74,9 @@ const CommentBox = ({ postId }) => {
               className="textarea textarea-bordered h-24"
               placeholder="Write Comment here"
               name="comment"
-              {...register("comment")}
+              {...register("comment", {
+                onChange: handleInputChange,
+              })}
             ></textarea>
           </label>
 
@@ -70,6 +84,7 @@ const CommentBox = ({ postId }) => {
             type="submit"
             value="Comment"
             className="cursor-pointer px-5 py-2 rounded bg-orange-400 text-white"
+            disabled={isButtonDisabled}
           />
         </form>
       </div>

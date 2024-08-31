@@ -4,9 +4,13 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import NodataFound from "../../../../Components/Shared/NodataFound";
 import PageTitle from "../../../../Components/PageTitle";
 import Loading from "../../../../Components/Shared/Loading";
+import { useMutation } from "@tanstack/react-query";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 
 const MyPost = () => {
   const [userBlogs, refetch, isLoading] = useUserBlogs();
+  const axioSecure = useAxiosSecure();
 
   // TODO: DELETE FEATURE IMPLEMENT
   // TODO: COMMENT FEATURE IMPLEMENT
@@ -17,8 +21,20 @@ const MyPost = () => {
   };
   // handle delete
   const handleDelete = (id) => {
-    console.log(id);
+    mutateAsync(id);
   };
+
+  // Mutation
+  const { mutateAsync } = useMutation({
+    mutationFn: async (id) => {
+      const { data } = await axioSecure.delete(`/blogs/${id}`);
+      if (data?.deletedCount > 0) {
+        toast.success("Your Post deleted");
+        refetch();
+      }
+      return data;
+    },
+  });
 
   if (isLoading) return <Loading />;
 
