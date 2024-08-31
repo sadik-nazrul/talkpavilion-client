@@ -3,17 +3,20 @@ import PageTitle from "../../../../Components/PageTitle";
 import NodataFound from "../../../../Components/Shared/NodataFound";
 import useRole from "../../../../Hooks/useRole";
 import useUsers from "../../../../Hooks/useUsers";
+import Loading from "../../../../Components/Shared/Loading";
 
 const ManageUsers = () => {
   const [role] = useRole();
-  const [users, refetch] = useUsers();
+  const [users, refetch, isLoading] = useUsers();
 
   //   TODO: MAKE ADMIN FEATURE
+
+  if (isLoading) return <Loading />;
 
   return (
     <div className="overflow-x-auto">
       <PageTitle title={"Manage Users"} />
-      {users.length === 0 ? (
+      {!users ? (
         <NodataFound />
       ) : (
         <table className="table table-zebra">

@@ -2,12 +2,15 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import useAxiosCommon from "../../../Hooks/useAxiosCommon";
-import useFeedbacks from "../../../Hooks/useFeedbacks";
+import useBlogs from "../../../Hooks/useBlogs";
 
 const CommentBox = ({ postId }) => {
   const { register, handleSubmit, reset } = useForm();
   const axiosCommon = useAxiosCommon();
-  const [feedbacks, refetch] = useFeedbacks({ postId });
+  const [blogs] = useBlogs();
+
+  // Find the comments
+  const comments = blogs.find((blog) => blog._id === postId)?.comments;
 
   //   Post comment
   const { mutateAsync } = useMutation({
@@ -30,12 +33,13 @@ const CommentBox = ({ postId }) => {
 
   return (
     <div className="space-y-5">
-      {feedbacks?.comments ? (
+      {comments ? (
         <div>
           <h2 className="text-xl font-semibold">
-            Comments: {feedbacks?.comments?.length}
+            Comments: {comments?.length}
           </h2>
-          {feedbacks?.comments?.map((comment, idx) => (
+
+          {comments.map((comment, idx) => (
             <p key={idx}>{comment.comment} </p>
           ))}
         </div>

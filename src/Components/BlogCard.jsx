@@ -2,12 +2,19 @@ import { CiClock2 } from "react-icons/ci";
 import { FaRegComment } from "react-icons/fa6";
 import { LiaVoteYeaSolid } from "react-icons/lia";
 import { Link } from "react-router-dom";
+import useBlogs from "../Hooks/useBlogs";
 
 const BlogCard = ({ post }) => {
   const voteCount = post?.upVote + post?.downVote;
+  const postId = post?._id;
+  const [blogs] = useBlogs();
+
+  // Find the number of comments for the current post
+  const commentsCount =
+    blogs.find((blog) => blog._id === postId)?.comments.length || 0;
 
   return (
-    <Link to={`/blog/${post._id}`}>
+    <Link to={`/blog/${postId}`}>
       <div className="shadow rounded-md p-4 flex flex-col gap-4">
         <div className="flex gap-4">
           <img
@@ -31,10 +38,10 @@ const BlogCard = ({ post }) => {
                 })
               : "Not Found"}
           </p>
-          <p className="flex gap-1 items-center">
+          <div className="flex gap-1 items-center">
             <FaRegComment />
-            {post?.commentCount || "No Data"}
-          </p>
+            {commentsCount}
+          </div>
           <p className="flex gap-1 items-center">
             <LiaVoteYeaSolid />
             {voteCount || "No Data"}

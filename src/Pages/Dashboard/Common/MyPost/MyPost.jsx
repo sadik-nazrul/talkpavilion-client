@@ -1,11 +1,12 @@
-import useBlogs from "../../../../Hooks/useBlogs";
+import useUserBlogs from "../../../../Hooks/useUserBlogs";
 import { GoCommentDiscussion } from "react-icons/go";
 import { FaRegTrashAlt } from "react-icons/fa";
 import NodataFound from "../../../../Components/Shared/NodataFound";
 import PageTitle from "../../../../Components/PageTitle";
+import Loading from "../../../../Components/Shared/Loading";
 
 const MyPost = () => {
-  const [blogs, refetch] = useBlogs();
+  const [userBlogs, refetch, isLoading] = useUserBlogs();
 
   // TODO: DELETE FEATURE IMPLEMENT
   // TODO: COMMENT FEATURE IMPLEMENT
@@ -19,10 +20,12 @@ const MyPost = () => {
     console.log(id);
   };
 
+  if (isLoading) return <Loading />;
+
   return (
     <div className="overflow-x-auto">
       <PageTitle title={"My Post"} />
-      {blogs.length === 0 ? (
+      {!userBlogs ? (
         <NodataFound />
       ) : (
         <table className="table table-zebra">
@@ -38,7 +41,7 @@ const MyPost = () => {
             </tr>
           </thead>
           <tbody>
-            {blogs.map((blog, idx) => (
+            {userBlogs.map((blog, idx) => (
               <tr key={blog._id} className="bg-gray-200">
                 <th>{idx + 1}</th>
                 <td title={blog.postTitle}>

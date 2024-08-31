@@ -3,21 +3,27 @@ import PageTitle from "../../../../Components/PageTitle";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import NodataFound from "../../../../Components/Shared/NodataFound";
+import Loading from "../../../../Components/Shared/Loading";
 
 const Announcements = () => {
   const axioSecure = useAxiosSecure();
-  const { data: announcements = [] } = useQuery({
+  const {
+    data: announcements = [],
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: ["announcements"],
+    isLoading: true,
     queryFn: async () => {
       const { data: announcement } = await axioSecure.get("/announcements");
       return announcement;
     },
   });
-
+  if (isLoading) return <Loading />;
   return (
     <div className="overflow-x-auto">
-      <PageTitle title={"Manage Users"} />
-      {announcements.length === 0 ? (
+      <PageTitle title={"Announcements"} />
+      {!announcements ? (
         <NodataFound />
       ) : (
         <table className="table table-zebra">

@@ -1,19 +1,18 @@
-import useAuth from "./useAuth";
-import useAxiosSecure from "./useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import useAxiosCommon from "./useAxiosCommon";
 
 const useBlogs = () => {
-  const { user } = useAuth();
-  const axiosSecure = useAxiosSecure();
-
-  const { data: blogs = [], refetch } = useQuery({
-    queryKey: ["blogs", user?.email],
+  const axiosCommon = useAxiosCommon();
+  const { data: blogs = [], isLoading } = useQuery({
+    queryKey: ["blogs"],
+    isLoading: true,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/blogsuser?email=${user?.email}`);
-      return res.data;
+      const { data: blogs } = await axiosCommon.get("/blogs");
+      return blogs;
     },
   });
-  return [blogs, refetch];
+
+  return [blogs, isLoading];
 };
 
 export default useBlogs;

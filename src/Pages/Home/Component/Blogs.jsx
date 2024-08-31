@@ -1,13 +1,13 @@
 import { useState } from "react";
 import BlogCard from "../../../Components/BlogCard";
-import usePosts from "../../../Hooks/usePosts";
+import useSortBlogs from "../../../Hooks/useSortBlogs";
 import SectionIntro from "../../../Components/Shared/SectionIntro/SectionIntro";
 
 const Blogs = () => {
   const [page, setPage] = useState(1);
 
   // Fetch posts using the custom hook
-  const [posts, totalPages, refetch] = usePosts(page);
+  const [posts, totalPages] = useSortBlogs(page);
 
   // Handle page navigation
   const handleNextPage = () => {
