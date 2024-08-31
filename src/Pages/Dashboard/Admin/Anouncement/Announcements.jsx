@@ -1,9 +1,11 @@
 import React from "react";
 import PageTitle from "../../../../Components/PageTitle";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import NodataFound from "../../../../Components/Shared/NodataFound";
 import Loading from "../../../../Components/Shared/Loading";
+import { FaPen, FaTrash } from "react-icons/fa6";
+import toast from "react-hot-toast";
 
 const Announcements = () => {
   const axioSecure = useAxiosSecure();
@@ -17,6 +19,23 @@ const Announcements = () => {
     queryFn: async () => {
       const { data: announcement } = await axioSecure.get("/announcements");
       return announcement;
+    },
+  });
+
+  // Delete
+  const handleDelete = (id) => {
+    mutateAsync(id);
+  };
+
+  // Mutation
+  const { mutateAsync } = useMutation({
+    mutationFn: async (id) => {
+      const { data } = await axioSecure.delete(`/announcement/${id}`);
+      if (data?.deletedCount > 0) {
+        toast.success("announcement deleted");
+        refetch();
+      }
+      return data;
     },
   });
   if (isLoading) return <Loading />;
@@ -35,14 +54,21 @@ const Announcements = () => {
               <th>Title</th>
               <th>Description</th>
               <th>Creation Time</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {announcements.map((announcement, idx) => (
               <tr key={announcement._id} className="bg-gray-200">
                 <th>{idx + 1}</th>
-                <td className="capitalize">{announcement?.authorName}</td>
-                <td>{announcement?.title}</td>
+                <td>
+                  <img
+                    className="w-10 rounded-full"
+                    src={announcement?.authorPhoto}
+                    alt={announcement?.author}
+                  />
+                </td>
+                <td>{announcement?.title.substring(0, 18)}</td>
                 <td title={announcement.description}>
                   {announcement?.description.substring(0, 24)}...
                 </td>
@@ -54,6 +80,11 @@ const Announcements = () => {
                         day: "numeric",
                       })
                     : "Not Found"}
+                </td>
+                <td className="space-x-4">
+                  <button onClick={() => handleDelete(announcement?._id)}>
+                    <FaTrash />
+                  </button>
                 </td>
               </tr>
             ))}
