@@ -1,27 +1,16 @@
 import React from "react";
 import PageTitle from "../../../../Components/PageTitle";
-import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import NodataFound from "../../../../Components/Shared/NodataFound";
 import Loading from "../../../../Components/Shared/Loading";
-import { FaPen, FaTrash } from "react-icons/fa6";
+import { FaTrash } from "react-icons/fa6";
 import toast from "react-hot-toast";
+import useAnnouncements from "../../../../Hooks/useAnnouncements";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 
 const Announcements = () => {
   const axioSecure = useAxiosSecure();
-  const {
-    data: announcements = [],
-    refetch,
-    isLoading,
-  } = useQuery({
-    queryKey: ["announcements"],
-    isLoading: true,
-    queryFn: async () => {
-      const { data: announcement } = await axioSecure.get("/announcements");
-      return announcement;
-    },
-  });
-
+  const [announcements, refetch, isLoading] = useAnnouncements();
   // Delete
   const handleDelete = (id) => {
     mutateAsync(id);
@@ -42,7 +31,7 @@ const Announcements = () => {
   return (
     <div className="overflow-x-auto">
       <PageTitle title={"Announcements"} />
-      {!announcements ? (
+      {announcements.length === 0 ? (
         <NodataFound />
       ) : (
         <table className="table table-zebra">
