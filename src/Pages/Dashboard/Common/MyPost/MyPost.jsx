@@ -7,17 +7,12 @@ import Loading from "../../../../Components/Shared/Loading";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const MyPost = () => {
   const [userBlogs, refetch, isLoading] = useUserBlogs();
   const axioSecure = useAxiosSecure();
 
-  // TODO: COMMENT FEATURE IMPLEMENT
-
-  // handle comment
-  const handleComment = (id) => {
-    console.log(id);
-  };
   // handle delete
   const handleDelete = (id) => {
     mutateAsync(id);
@@ -64,11 +59,13 @@ const MyPost = () => {
                 </td>
                 <td>{blog?.upVote}</td>
                 <td>{blog?.downVote}</td>
-                <td
-                  onClick={() => handleComment(blog?._id)}
-                  className="cursor-pointer"
-                >
-                  <GoCommentDiscussion size={20} />
+                <td>
+                  <Link
+                    className="flex items-center gap-2"
+                    to={`/dashboard/comments/${blog?._id}`}
+                  >
+                    <GoCommentDiscussion size={20} />({blog?.comments?.length})
+                  </Link>
                 </td>
                 <td
                   onClick={() => handleDelete(blog?._id)}

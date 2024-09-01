@@ -17,6 +17,7 @@ import AdminRoute from "./AdminRoute";
 import AddAnnouncement from "../Pages/Dashboard/Admin/Anouncement/AddAnnouncement";
 import Announcements from "../Pages/Dashboard/Admin/Anouncement/Announcements";
 import BlogDetails from "../Pages/BlogDetails/BlogDetails";
+import Comments from "../Pages/Dashboard/Common/Comments/Comments";
 
 export const router = createBrowserRouter([
   // Common Routes
@@ -84,6 +85,12 @@ export const router = createBrowserRouter([
       {
         path: "my-posts",
         element: <MyPost />,
+      },
+      {
+        path: "comments/:id",
+        element: <Comments />,
+        loader: ({ params }) =>
+          fetch(`${import.meta.env.VITE_TALKPAVILION_API}/blog/${params.id}`),
       },
 
       // Admin Only Routes

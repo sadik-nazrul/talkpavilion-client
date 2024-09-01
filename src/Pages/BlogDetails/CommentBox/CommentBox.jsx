@@ -44,13 +44,19 @@ const CommentBox = ({ postId }) => {
   return (
     <div className="space-y-5">
       {comments ? (
-        <div>
+        <div className="w-fit">
           <h2 className="text-xl font-semibold">
             Comments: {comments?.length}
           </h2>
 
           {comments.map((comment, idx) => (
-            <p key={idx}>{comment.comment}</p>
+            <div key={idx} className="border my-4 p-5 rounded-br-[50px]">
+              <p>{comment.comment}</p>
+              <p>
+                <span className="text-orange-400">Reply: </span>
+                {comment?.reply}
+              </p>
+            </div>
           ))}
         </div>
       ) : (
