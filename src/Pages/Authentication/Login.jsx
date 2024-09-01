@@ -18,8 +18,7 @@ const Login = () => {
   const location = useLocation();
   // Show password state
   const [showPassword, setShowPasword] = useState(false);
-
-  console.log(location);
+  const from = location.state?.from?.pathname || "/";
 
   // React Hook form
   const { register, handleSubmit } = useForm();
@@ -28,7 +27,7 @@ const Login = () => {
       setLoading(true);
       await signin(data.email, data.password);
       toast.success("Signin Successfull");
-      navigate(location.state ? location.state : "/");
+      navigate(from, { replace: true });
     } catch (err) {
       toast.error(err.message);
     }
@@ -62,7 +61,7 @@ const Login = () => {
       } catch (error) {
         console.error("Captcha initialization failed:", error);
       }
-    }, 100); // Adjust as necessary
+    }, 100);
 
     return () => clearTimeout(timer);
   }, []);
@@ -82,7 +81,7 @@ const Login = () => {
     try {
       await googleSignIn();
       toast.success("Login Successfull");
-      navigate(location.state ? location.state : "/");
+      navigate(from, { replace: true });
     } catch (err) {
       toast.error(err.message);
     }

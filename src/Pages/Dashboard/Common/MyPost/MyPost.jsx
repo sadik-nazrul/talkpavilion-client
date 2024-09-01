@@ -12,7 +12,6 @@ const MyPost = () => {
   const [userBlogs, refetch, isLoading] = useUserBlogs();
   const axioSecure = useAxiosSecure();
 
-  // TODO: DELETE FEATURE IMPLEMENT
   // TODO: COMMENT FEATURE IMPLEMENT
 
   // handle comment

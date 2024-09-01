@@ -3,7 +3,11 @@ import useAxiosCommon from "./useAxiosCommon";
 
 const useBlogs = () => {
   const axiosCommon = useAxiosCommon();
-  const { data: blogs = [], isLoading } = useQuery({
+  const {
+    data: blogs = [],
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: ["blogs"],
     isLoading: true,
     queryFn: async () => {
@@ -12,7 +16,7 @@ const useBlogs = () => {
     },
   });
 
-  return [blogs, isLoading];
+  return [blogs, refetch, isLoading];
 };
 
 export default useBlogs;
