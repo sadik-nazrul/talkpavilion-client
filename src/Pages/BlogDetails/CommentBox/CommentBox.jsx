@@ -6,7 +6,7 @@ import useBlogs from "../../../Hooks/useBlogs";
 import useAuth from "../../../Hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const CommentBox = ({ postId }) => {
+const CommentBox = ({ postId, author }) => {
   const { register, handleSubmit, reset } = useForm();
   const axiosCommon = useAxiosCommon();
   const [blogs, refetch] = useBlogs();
@@ -20,11 +20,14 @@ const CommentBox = ({ postId }) => {
   // Post comment
   const { mutateAsync } = useMutation({
     mutationFn: async (data) => {
-      const { data: comment } = await axiosCommon.post("/comment", data);
-      toast.success("Comment successful");
-      reset();
-      refetch();
-      return comment.data;
+      if (user.email !== author) {
+        const { data: comment } = await axiosCommon.post("/comment", data);
+        toast.success("Comment successful");
+        reset();
+        refetch();
+        return comment.data;
+      }
+      return toast.error("Action not Allowed Cause you are the author");
     },
   });
 
@@ -53,8 +56,11 @@ const CommentBox = ({ postId }) => {
             <div key={idx} className="border my-4 p-5 rounded-br-[50px]">
               <p>{comment.comment}</p>
               <p>
-                <span className="text-orange-400">Reply: </span>
-                {comment?.reply}
+                {comment?.reply && (
+                  <span className="text-orange-400">
+                    Reply: {comment?.reply}
+                  </span>
+                )}
               </p>
             </div>
           ))}

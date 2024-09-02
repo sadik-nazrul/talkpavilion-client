@@ -2,12 +2,13 @@ import { useState } from "react";
 import BlogCard from "../../../Components/BlogCard";
 import useSortBlogs from "../../../Hooks/useSortBlogs";
 import SectionIntro from "../../../Components/Shared/SectionIntro/SectionIntro";
+import Loading from "../../../Components/Shared/Loading";
 
 const Blogs = () => {
   const [page, setPage] = useState(1);
 
   // Fetch posts using the custom hook
-  const [posts, totalPages] = useSortBlogs(page);
+  const [posts, totalPages, isLoading] = useSortBlogs(page);
 
   // Handle page navigation
   const handleNextPage = () => {
@@ -32,6 +33,7 @@ const Blogs = () => {
       />
 
       {/* Blog Posts Grid */}
+      {isLoading && <Loading />}
       <div className="grid lg:grid-cols-3 gap-5">
         {posts?.map((post) => (
           <BlogCard key={post?._id} post={post} />

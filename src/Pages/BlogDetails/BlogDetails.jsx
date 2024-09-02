@@ -1,4 +1,9 @@
-import { useLoaderData, useLocation, useParams } from "react-router-dom";
+import {
+  useLoaderData,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import parse from "html-react-parser";
 import AuthorBox from "./AuthorBox/AuthorBox";
 import {
@@ -16,19 +21,21 @@ import {
   FaThumbsUp,
   FaTwitter,
 } from "react-icons/fa6";
-import useAxiosCommon from "../../Hooks/useAxiosCommon";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import CommentBox from "./CommentBox/CommentBox";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import useAuth from "../../Hooks/useAuth";
 
 const BlogDetails = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const shareUrl = `${import.meta.env.VITE_URL}/${location.pathname}`;
   const url = useParams();
-  const axiosCommon = useAxiosCommon();
-  const [vote, setVote] = useState(null);
+  const axioSecure = useAxiosSecure();
   const [disabled, setDisabled] = useState(false);
+  const { user } = useAuth();
 
   const {
     authorName,
@@ -45,23 +52,25 @@ const BlogDetails = () => {
   // Mutation hook for sending vote data
   const { mutateAsync } = useMutation({
     mutationFn: async (vote) => {
-      const res = await axiosCommon.put("/vote", vote);
-      if (res.data.modifiedCount > 0) {
-        toast.success("Your vote sucessfully counted");
-        setDisabled(true);
+      if (user?.email !== authorEmail) {
+        const res = await axioSecure.put("/vote", vote);
+        if (res.data.modifiedCount > 0) {
+          toast.success("Your vote sucessfully counted");
+          setDisabled(true);
+        }
+        return res.data;
       }
-      return res.data;
+      return toast.error("Action not Allowed cause You are the Author");
     },
   });
 
   // Handle vote submission
-  const handleVote = async (vote, id) => {
-    const voteData = { vote, id: id.id }; // Structure your vote data as needed
-    setVote(voteData); // Set state if necessary
-    try {
-      await mutateAsync(voteData); // Send vote data to the backend
-    } catch (error) {
-      console.error("Error submitting vote:", error); // Handle error as needed
+  const handleVote = (vote, id) => {
+    if (user?.email) {
+      const voteData = { vote, id: id.id };
+      mutateAsync(voteData);
+    } else {
+      navigate("/login", { state: { from: location } });
     }
   };
 
@@ -86,7 +95,7 @@ const BlogDetails = () => {
           </div>
 
           {/* Comment */}
-          <CommentBox postId={_id} />
+          <CommentBox postId={_id} author={authorEmail} />
         </div>
 
         {/* sidebar */}

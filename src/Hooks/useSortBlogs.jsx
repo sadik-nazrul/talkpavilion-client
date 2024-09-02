@@ -7,18 +7,19 @@ const useSortBlogs = (page = 1, limit = 5) => {
   const axiosCommon = useAxiosCommon();
 
   // Define the query function to fetch posts data
-  const { data: postsData = { blogs: [], totalPages: 0 } } = useQuery({
-    queryKey: ["posts", user?.email, page, limit],
-    queryFn: async () => {
-      const res = await axiosCommon.get(
-        `/sortblogs?page=${page}&limit=${limit}`
-      );
-      return res.data;
-    },
-  });
+  const { data: postsData = { blogs: [], totalPages: 0 }, isLoading } =
+    useQuery({
+      queryKey: ["posts", user?.email, page, limit],
+      queryFn: async () => {
+        const res = await axiosCommon.get(
+          `/sortblogs?page=${page}&limit=${limit}`
+        );
+        return res.data;
+      },
+    });
 
   // Return the posts, total pages, and refetch function
-  return [postsData.blogs, postsData.totalPages];
+  return [postsData.blogs, postsData.totalPages, isLoading];
 };
 
 export default useSortBlogs;
