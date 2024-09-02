@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import useAuth from "../../Hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -14,6 +15,7 @@ const CheckoutForm = () => {
   const [cardComplete, setCardComplete] = useState(false);
   const [cardError, setCardError] = useState(null);
   const price = 14;
+  const navigate = useNavigate();
 
   useEffect(() => {
     axiosSecure
@@ -50,9 +52,9 @@ const CheckoutForm = () => {
     });
 
     if (error) {
-      console.log("[error]", error);
+      toast.error(error.message);
     } else {
-      console.log("[PaymentMethod]", paymentMethod);
+      toast.success(paymentMethod.card);
     }
 
     // Confirm payment
@@ -69,7 +71,7 @@ const CheckoutForm = () => {
     if (confirmError) {
       toast.error("Payment Confirm Error");
     } else {
-      console.log("payment intent", paymentIntent);
+      toast.success(paymentIntent.status);
       if (paymentIntent.status === "succeeded") {
         setTransactionId(paymentIntent.id);
 
@@ -81,13 +83,15 @@ const CheckoutForm = () => {
             status: "paid",
             transactionId: paymentIntent.id,
           };
+          console.log(currentUser);
+
           const { data } = await axiosSecure.put(
             `/user/${user?.email}`,
             currentUser
           );
-          console.log(data);
           if (data.modifiedCount > 0) {
             toast.success("You are now gold member");
+            navigate("/dashboard");
           }
         } catch (err) {
           toast.error(err.message);
